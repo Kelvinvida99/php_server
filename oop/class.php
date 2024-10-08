@@ -4,17 +4,17 @@ declare(strict_types=1);
 $sale = new Sales(10.5, Date("Y-m-d"));
 $sale = new Sales(10.5, Date("Y-m-d"));
 
-echo Sales::$count;
-
 Sales::reset();
 
 $sale = new Sales(10.5, Date("Y-m-d"));
 
-echo Sales::$count;
+$onlineSale = new SalesOnline(10.5, Date("Y-m-d"));
+
+echo $onlineSale->createInvoice();
 
 $concept = new Concept("Cerveza", 10);
 $sale->addConcept($concept);
-print_r($sale->concepts);
+
 
 class Sales{
     public float $total;
@@ -22,7 +22,7 @@ class Sales{
     public static $count;
     public array $concepts;
 
-    public function __construct(float $total, string $date) {
+    public function __construct(float | int $total, string $date) {
         $this->total = $total;
         $this->date = $date;
         $this->concepts = [];
@@ -43,6 +43,12 @@ class Sales{
 
     public function __destruct() {
         echo "sea eliminado el objeto";
+    }
+}
+
+class SalesOnline extends Sales {
+    public function __construct(float $total, string $date) {
+        parent::__construct($total, $date);
     }
 }
 
