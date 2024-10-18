@@ -16,11 +16,11 @@ class Add {
     }
 
     public function add($data): bool {
-        if($this->validator->validateAdd($data)){
-            $this->repository->create($data);
-            return true;
+        if(!$this->validator->validateAdd($data)){
+            throw new ($this->validator->getErrors());
         }
 
-        return false;
+        $this->repository->create($data);
+        return true;
     }
 }
