@@ -1,5 +1,7 @@
 <?php
 
+header("Content-Type: application/json");
+
 require_once __DIR__."/validators/autoload.php";
 
 use app\business\Add;
@@ -10,11 +12,14 @@ use app\data\Repository;
 use app\validators\Validator;
 use app\exception\DataException;
 use app\exception\ValidationException;
+use app\database\RepositoryDB;
 
-$repoistory = new Repository();
+//$repoistory = new Repository();
 $validator = new Validator();
 
 try{
+    $repoistory = new RepositoryDB();
+
 
     switch($_SERVER['REQUEST_METHOD']){
         case "GET":
@@ -49,7 +54,13 @@ try{
 }catch(DataException $e){
     http_response_code(404);
     echo json_encode(['error' => $e->getMessage()]);
+}catch(PDOException $e){
+    http_response_code(500);
+    echo json_encode(['error' => $e->getMessage()]);
 }catch(\Exception $e){
     http_response_code(500);
+    echo json_encode(['error' => $e->getMessage()]);
+}catch(TypeError $e){
+    http_response_code(400);
     echo json_encode(['error' => $e->getMessage()]);
 }
